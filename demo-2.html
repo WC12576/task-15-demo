@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo-2</title>
+    <style>
+        ul,li{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        #newList li{
+            margin-top: 10px;
+            border: 1px solid black;
+            border-radius: 5px;
+            line-height: 30px;
+        }
+        .hover{
+            background: green;
+        }
+        #loadMore{
+            margin: 10px auto;
+            display: block;
+            width: 150px;
+            line-height: 20px;
+            padding: 10px 15px;
+            text-decoration: none;
+            text-align: center;
+            border: 1px solid red;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <ul id="newList">
+        <li>新闻1</li>
+        <li>新闻2</li>
+    </ul>
+    <a href="#" id="loadMore">加载更多</a>
+    <script src="./jquery.min.js"></script>
+    <script>
+        var lock = true
+        var index = 1
+        var length = 3
+        $('#loadMore').on('click',function(e){
+            e.preventDefault()
+            if(!lock){return}
+            lock = false
+            $(this).text('正在加载ing.....')
+            $.get('moreNew',{index:index,length:length})
+             .done(function(data){
+                 if(data.status === 0){
+                     index++
+                     appendHtml(data)
+                 }else{
+                     alert('出问题了')
+                 }
+                 lock = true
+                 $(this).text('加载更多')
+             })
+             function appendHtml(data){
+                 var html =''
+                 html += '<li>'+'新闻'+'data.arr[0]'+'</li>'
+                 html += '<li>'+'新闻'+'data.arr[1]'+'</li>'
+                 html += '<li>'+'新闻'+'data.arr[2]'+'</li>'
+                 $('#newList').append(html)
+             }
+        })
+        $('#newList').on('mouseover','li',function(){
+            $(this).addClass('hover');
+        }).on('mouseleave','li',function(){
+            $(this).removeClass('hover');
+        })
+    </script>
+</body>
+</html>
